@@ -1,8 +1,12 @@
 package com.lc.test.user.service.impl;
 
+import com.lc.test.common.entity.BaseResp;
+import com.lc.test.common.vo.TTestVo;
 import com.lc.test.user.mapper.TTestMapper;
 import com.lc.test.user.model.TTest;
+import com.lc.test.user.proxy.OrderProxy;
 import com.lc.test.user.service.UserService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +16,17 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private TTestMapper testMapper;
 
+    @Autowired
+    private OrderProxy orderProxy;
+
     @Override
-    public int add(TTest tTest) {
-        return testMapper.insert(tTest);
+    public int add(TTestVo tTestVo) {
+        TTest tTest = new TTest();
+
+        //向order模块发送添加order指令
+        final BaseResp orderResp = orderProxy.addOrder(tTestVo);
+
+        BeanUtils.copyProperties(tTestVo, tTest);
+        return testMapper.insertSelective(tTest);
     }
 }

@@ -1,4 +1,4 @@
-package com.lc.test.common.controller.base;
+package com.lc.test.common.controller;
 
 import com.lc.test.common.entity.BaseResp;
 
@@ -13,6 +13,13 @@ public class BaseController {
             baseResp.setCode(1001);
             baseResp.setMessage("操作失败");
         }
+        return baseResp;
+    }
+
+    public BaseResp fallback(){
+        BaseResp baseResp = new BaseResp();
+        baseResp.setCode(1000);
+        baseResp.setMessage("降级处理");
         return baseResp;
     }
 }

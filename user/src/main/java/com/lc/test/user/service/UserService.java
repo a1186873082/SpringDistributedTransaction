@@ -1,8 +1,9 @@
 package com.lc.test.user.service;
 
+import com.lc.test.common.vo.TTestVo;
 import com.lc.test.user.model.TTest;
 
 public interface UserService {
 
-    public int add(TTest tTest);
+    int add(TTestVo tTestVo);
 }

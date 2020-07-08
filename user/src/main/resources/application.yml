@@ -3,7 +3,7 @@ Spring:
     name: user
   datasource:
     name: test
-    url: jdbc:mysql://10.14.32.166:3306/test
+    url: jdbc:mysql://10.14.32.166:3306/user
     username: root
     password: 111111
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -15,6 +15,10 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:1001/eureka/
+
+feign:
+  hystrix:
+    enabled: true
 
 mybatis:
   mapper-locations: classpath:mybatis/*.xml

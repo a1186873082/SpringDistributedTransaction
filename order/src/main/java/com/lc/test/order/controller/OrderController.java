@@ -1,6 +1,6 @@
 package com.lc.test.order.controller;
 
-import com.lc.test.common.controller.base.BaseController;
+import com.lc.test.common.controller.BaseController;
 import com.lc.test.common.entity.BaseResp;
 import com.lc.test.order.model.TOrder;
 import com.lc.test.order.service.OrderService;
@@ -18,7 +18,7 @@ public class OrderController extends BaseController {
     private OrderService orderService;
 
     @RequestMapping(value = "/add_order", method = RequestMethod.POST)
-    public BaseResp addOrder(@RequestBody TOrder tOrder){
+    public BaseResp addOrder(@RequestBody TOrder tOrder) {
         return respByResult(orderService.addOrder(tOrder));
     }
 }

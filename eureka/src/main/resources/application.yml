@@ -3,7 +3,7 @@ Spring:
     name: lc-eureka
   datasource:
     name: test
-    url: jdbc:mysql://10.14.32.166:3306/test
+    url: jdbc:mysql://10.14.32.166:3306/user
     username: root
     password: 111111
     driver-class-name: com.mysql.cj.jdbc.Driver
