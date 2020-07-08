@@ -1,0 +1,21 @@
+Spring:
+  application:
+    name: lc-eureka
+  datasource:
+    name: test
+    url: jdbc:mysql://10.14.32.166:3306/test
+    username: root
+    password: 111111
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+server:
+  port: 1001
+
+eureka:
+  instance:
+    hostname: eureka
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    serviceUrl:
+      defaultZone: http://eureka:1001/eureka/

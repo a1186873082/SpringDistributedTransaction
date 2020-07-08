@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lc.test.order.mapper.TOrderMapper">
+
+    <resultMap type="com.lc.test.order.model.TOrder" id="TOrderMap">
+        <result property="orderId" column="order_id"/>
+        <result property="orderCode" column="order_code"/>
+        <result property="orderPrice" column="order_price"/>
+        <result property="orderNum" column="order_num"/>
+    </resultMap>
+
+    <sql id="allResult">
+        <trim suffixOverrides=",">
+            `order_id`,
+            `order_code`,
+            `order_price`,
+            `order_num`,
+        </trim>
+    </sql>
+
+    <insert id="insertTOrder"  useGeneratedKeys="true" keyProperty="orderId">
+        INSERT INTO `t_order`
+        (
+        <trim suffixOverrides=",">
+            <if test="orderId!=null">
+                `order_id`,
+            </if>
+            <if test="orderCode!=null">
+                `order_code`,
+            </if>
+            <if test="orderPrice!=null">
+                `order_price`,
+            </if>
+            <if test="orderNum!=null">
+                `order_num`,
+            </if>
+        </trim>
+        )
+        VALUES
+        (
+        <trim suffixOverrides=",">
+            <if test="orderId!=null">
+                #{orderId},
+            </if>
+            <if test="orderCode!=null">
+                #{orderCode},
+            </if>
+            <if test="orderPrice!=null">
+                #{orderPrice},
+            </if>
+            <if test="orderNum!=null">
+                #{orderNum},
+            </if>
+        </trim>
+        )
+    </insert>
+
+    <update id="updateTOrder">
+        UPDATE `t_order`
+        SET
+        <trim suffixOverrides=",">
+            <if test="orderCode != null and orderCode!=''">
+                `order_code` = #{orderCode},
+            </if>
+            <if test="orderPrice != null">
+                `order_price` = #{orderPrice},
+            </if>
+            <if test="orderNum != null">
+                `order_num` = #{orderNum},
+            </if>
+        </trim>
+        WHERE
+        <trim suffixOverrides="and">
+            `order_id` = #{orderId} and
+        </trim>
+    </update>
+
+</mapper>
