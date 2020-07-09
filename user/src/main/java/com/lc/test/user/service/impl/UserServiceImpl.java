@@ -9,6 +9,7 @@ import com.lc.test.user.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -20,13 +21,18 @@ public class UserServiceImpl implements UserService {
     private OrderProxy orderProxy;
 
     @Override
+    @Transactional
     public int add(TTestVo tTestVo) {
         TTest tTest = new TTest();
 
         //向order模块发送添加order指令
-        final BaseResp orderResp = orderProxy.addOrder(tTestVo);
+        BaseResp orderResp = orderProxy.addOrder(tTestVo);
 
         BeanUtils.copyProperties(tTestVo, tTest);
-        return testMapper.insertSelective(tTest);
+        int result = testMapper.insertSelective(tTest);
+        if(true){
+            throw new RuntimeException();
+        }
+        return result;
     }
 }

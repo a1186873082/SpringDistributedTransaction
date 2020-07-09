@@ -5,6 +5,7 @@ import com.lc.test.order.model.TOrder;
 import com.lc.test.order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -13,6 +14,7 @@ public class OrderServiceImpl implements OrderService {
     private TOrderMapper orderMapper;
 
     @Override
+    @Transactional
     public int addOrder(TOrder tOrder) {
         return orderMapper.insertTOrder(tOrder);
     }
