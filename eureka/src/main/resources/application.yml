@@ -9,7 +9,7 @@ Spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 server:
-  port: 1001
+  port: 9507
 
 eureka:
   instance:
@@ -18,4 +18,4 @@ eureka:
     register-with-eureka: false
     fetch-registry: false
     serviceUrl:
-      defaultZone: http://eureka:1001/eureka/
+      defaultZone: http://10.14.32.166:1001/eureka/

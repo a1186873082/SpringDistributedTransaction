@@ -6,6 +6,7 @@ import com.lc.test.user.mapper.TTestMapper;
 import com.lc.test.user.model.TTest;
 import com.lc.test.user.proxy.OrderProxy;
 import com.lc.test.user.service.UserService;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class UserServiceImpl implements UserService {
     private OrderProxy orderProxy;
 
     @Override
-    @Transactional
+    @GlobalTransactional
     public int add(TTestVo tTestVo) {
         TTest tTest = new TTest();
 
