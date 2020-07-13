@@ -1,5 +1,6 @@
 package com.lc.test.user;
 
+import com.alibaba.druid.pool.DruidDataSource;
 import com.zaxxer.hikari.HikariDataSource;
 import io.seata.rm.datasource.DataSourceProxy;
 import io.seata.spring.annotation.datasource.EnableAutoDataSourceProxy;
@@ -44,8 +45,8 @@ public class UserApplication {
     @Primary
     @Bean("dataSource")
     public DataSourceProxy dataSource() {
-        HikariDataSource dataSource = new HikariDataSource();
-        dataSource.setJdbcUrl(env.getProperty("spring.datasource.url"));
+        DruidDataSource dataSource = new DruidDataSource();
+        dataSource.setUrl(env.getProperty("spring.datasource.url"));
         dataSource.setUsername(env.getProperty("spring.datasource.username"));
         dataSource.setPassword(env.getProperty("spring.datasource.password"));
         dataSource.setDriverClassName(env.getProperty("spring.datasource.driver-class-name"));
@@ -57,7 +58,7 @@ public class UserApplication {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setDataSource(dataSourceProxy);
         sqlSessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver()
-                .getResources("classpath*:/mapper/*.xml"));
+                .getResources("classpath*:/mybatis/*.xml"));
         sqlSessionFactoryBean.setTransactionFactory(new SpringManagedTransactionFactory());
         return sqlSessionFactoryBean.getObject();
     }

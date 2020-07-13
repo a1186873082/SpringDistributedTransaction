@@ -22,6 +22,7 @@ public class UserServiceImpl implements UserService {
     private OrderProxy orderProxy;
 
     @Override
+//    @Transactional
     @GlobalTransactional
     public int add(TTestVo tTestVo) {
         TTest tTest = new TTest();

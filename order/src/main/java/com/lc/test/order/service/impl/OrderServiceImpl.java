@@ -15,6 +15,7 @@ public class OrderServiceImpl implements OrderService {
     private TOrderMapper orderMapper;
 
     @Override
+//    @Transactional
     @GlobalTransactional
     public int addOrder(TOrder tOrder) {
         return orderMapper.insertTOrder(tOrder);
