@@ -13,12 +13,12 @@ Spring:
         tx-service-group: my_test_tx_group
 
 server:
-  port: 1002
+  port: 1004
 
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://10.14.32.166:9507/eureka/
+      defaultZone: http://localhost:1001/eureka/
 
 feign:
   hystrix:

@@ -12,7 +12,7 @@
     <parent>
         <groupId>org.springframework.cloud</groupId>
         <artifactId>spring-cloud-starter-parent</artifactId>
-        <version>Finchley.RELEASE</version>
+        <version>Greenwich.RELEASE</version>
         <!--<version>Camden.SR7</version>-->
         <!--<version>Brixton.RELEASE</version>-->
     </parent>
@@ -97,17 +97,6 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-alibaba-seata</artifactId>
-            <version>2.0.0.RELEASE</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.seata</groupId>
-            <artifactId>seata-all</artifactId>
-            <version>1.2.0</version>
-        </dependency>
     </dependencies>
 
 
