@@ -1,0 +1,23 @@
+Spring:
+  application:
+    name: order
+  datasource:
+    name: test
+    url: jdbc:mysql://10.14.32.166:3306/order
+    username: root
+    password: 111111
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  cloud:
+    alibaba:
+      seata:
+        tx-service-group: my_test_tx_group
+server:
+  port: 1003
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:1001/eureka/
+
+mybatis:
+  mapper-locations: classpath:mybatis/*.xml

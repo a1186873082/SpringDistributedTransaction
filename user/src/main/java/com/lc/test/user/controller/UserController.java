@@ -22,4 +22,6 @@ public class UserController extends BaseController {
     public BaseResp addUser(@RequestBody TTestVo test) {
         return respByResult(userService.add(test));
     }
+
+
 }
