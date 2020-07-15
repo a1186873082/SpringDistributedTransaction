@@ -1,6 +1,7 @@
 package com.lc.test.account.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -57,6 +58,7 @@ public class Account implements Serializable {
     */
     private java.time.LocalDateTime updateTime;
 
+    private BigDecimal payAmount;
 
     public void setAccountId(Integer accountId){this.accountId = accountId;}
 
@@ -85,4 +87,12 @@ public class Account implements Serializable {
     public void setUpdateTime(java.time.LocalDateTime updateTime){this.updateTime = updateTime;}
 
     public java.time.LocalDateTime getUpdateTime(){return this.updateTime;}
+
+    public BigDecimal getPayAmount() {
+        return payAmount;
+    }
+
+    public void setPayAmount(BigDecimal payAmount) {
+        this.payAmount = payAmount;
+    }
 }

@@ -14,4 +14,5 @@ public interface AccountMapper {
 
     int updateaccount(Account object);
 
+    Account selectOne(int id);
 }

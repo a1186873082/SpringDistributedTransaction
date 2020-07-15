@@ -1,9 +1,9 @@
 Spring:
   application:
-    name: order
+    name: account
   datasource:
     name: test
-    url: jdbc:mysql://10.14.32.166:3306/order
+    url: jdbc:mysql://10.14.32.166:3306/account
     username: root
     password: 111111
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -12,7 +12,7 @@ Spring:
       seata:
         tx-service-group: my_test_tx_group
 server:
-  port: 1003
+  port: 1005
 
 eureka:
   client:

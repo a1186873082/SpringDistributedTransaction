@@ -111,4 +111,11 @@
         </trim>
     </update>
 
+    <select id="selectOne" resultMap="accountMap">
+        select 
+        <include refid="allResult"></include>
+        from account
+        where account_id = #{id}
+    </select>
+
 </mapper>

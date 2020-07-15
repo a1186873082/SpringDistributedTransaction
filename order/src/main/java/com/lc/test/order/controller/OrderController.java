@@ -23,13 +23,13 @@ public class OrderController extends BaseController {
     }
 
 
-//    /**
-//     * 模拟支付，一个商品20元(无库存)
-//     * @param tOrder
-//     * @return
-//     */
-//    @RequestMapping(value = "/pay_order", method = RequestMethod.POST)
-//    public BaseResp payOrder(@RequestBody TOrder tOrder) {
-//
-//    }
+    /**
+     * 模拟支付，一个商品20元(无库存)
+     * @param tOrder
+     * @return
+     */
+    @RequestMapping(value = "/pay_order", method = RequestMethod.POST)
+    public BaseResp payOrder(@RequestBody TOrder tOrder) {
+        return respByResult(orderService.payOrder(tOrder));
+    }
 }
