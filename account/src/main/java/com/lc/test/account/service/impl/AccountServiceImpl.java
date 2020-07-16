@@ -5,15 +5,17 @@ import com.lc.test.account.mapper.AccountMapper;
 import com.lc.test.account.model.Account;
 import com.lc.test.account.service.AccountService;
 import com.netflix.discovery.converters.Auto;
+import io.seata.rm.tcc.api.BusinessActionContext;
 import io.seata.rm.tcc.api.LocalTCC;
 import io.seata.spring.annotation.GlobalTransactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
-@LocalTCC
 public class AccountServiceImpl implements AccountService {
 
     @Autowired
@@ -23,9 +25,8 @@ public class AccountServiceImpl implements AccountService {
     private AccountAction accountAction;
 
     @Override
-    @GlobalTransactional
     public boolean pay(BigDecimal paymentAmount) {
-        boolean pay = accountAction.pay(paymentAmount, 1);
+        boolean pay = accountAction.pay(paymentAmount);
         if(!pay){
             throw new RuntimeException("TccActionOne failed.");
         }

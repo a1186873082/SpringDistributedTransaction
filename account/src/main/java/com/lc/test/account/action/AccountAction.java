@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @LocalTCC
 public interface AccountAction {
     @TwoPhaseBusinessAction(name = "pay", commitMethod = "commit", rollbackMethod = "fallback")
-    public boolean pay(BigDecimal amount, @BusinessActionContextParameter(paramName = "a") int a);
+    public boolean pay(@BusinessActionContextParameter(paramName = "paymentAmount") BigDecimal paymentAmount);
 
     public boolean commit(BusinessActionContext context);
 
