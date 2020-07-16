@@ -25,7 +25,7 @@ public class AccountController extends BaseController {
     @RequestMapping(value = "/pay", method = RequestMethod.POST)
     public BaseResp pay(@RequestBody Account account) {
 
-        int result = accountService.pay(account.getPayAmount());
+        boolean result = accountService.pay(account.getPayAmount());
         return respByResult(result);
     }
 }

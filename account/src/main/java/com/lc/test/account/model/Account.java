@@ -2,10 +2,8 @@ package com.lc.test.account.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.List;
+import java.util.*;
+
 /**
 *
 *  @author author
@@ -50,13 +48,13 @@ public class Account implements Serializable {
     * 
     * isNullAble:1
     */
-    private java.time.LocalDateTime createTime;
+    private Date createTime;
 
     /**
     * 
     * isNullAble:1
     */
-    private java.time.LocalDateTime updateTime;
+    private Date updateTime;
 
     private BigDecimal payAmount;
 
@@ -80,13 +78,21 @@ public class Account implements Serializable {
 
     public Integer getStatus(){return this.status;}
 
-    public void setCreateTime(java.time.LocalDateTime createTime){this.createTime = createTime;}
+    public Date getCreateTime() {
+        return createTime;
+    }
 
-    public java.time.LocalDateTime getCreateTime(){return this.createTime;}
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 
-    public void setUpdateTime(java.time.LocalDateTime updateTime){this.updateTime = updateTime;}
+    public Date getUpdateTime() {
+        return updateTime;
+    }
 
-    public java.time.LocalDateTime getUpdateTime(){return this.updateTime;}
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
 
     public BigDecimal getPayAmount() {
         return payAmount;
