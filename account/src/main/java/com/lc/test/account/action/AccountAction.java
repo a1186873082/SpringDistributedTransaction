@@ -9,6 +9,15 @@ import java.math.BigDecimal;
 
 @LocalTCC
 public interface AccountAction {
+    /**
+     * name: tcc的bean的名称，全局需要唯一
+     * commitMethod: try成功后的二阶段提交方法
+     * rollbackMethod: try失败后的二阶段回滚方法
+     * @BusinessActionContextParameter: 可传值到二阶段的参数
+     *
+     * @param paymentAmount
+     * @return
+     */
     @TwoPhaseBusinessAction(name = "pay", commitMethod = "commit", rollbackMethod = "fallback")
     public boolean pay(@BusinessActionContextParameter(paramName = "paymentAmount") BigDecimal paymentAmount);
 

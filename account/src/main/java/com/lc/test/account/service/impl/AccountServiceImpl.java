@@ -25,9 +25,10 @@ public class AccountServiceImpl implements AccountService {
     private AccountAction accountAction;
 
     @Override
+    @GlobalTransactional
     public boolean pay(BigDecimal paymentAmount) {
         boolean pay = accountAction.pay(paymentAmount);
-        if(!pay){
+        if (!pay) {
             throw new RuntimeException("TccActionOne failed.");
         }
         return true;
