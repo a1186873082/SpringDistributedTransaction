@@ -187,12 +187,21 @@
    @Primary
    @Bean("dataSource")
    public DataSourceProxy dataSource() {
-   DruidDataSource dataSource = new DruidDataSource();
-   dataSource.setUrl(env.getProperty("spring.datasource.url"));
-   dataSource.setUsername(env.getProperty("spring.datasource.username"));
-   dataSource.setPassword(env.getProperty("spring.datasource.password"));
-   dataSource.setDriverClassName(env.getProperty("spring.datasource.driver-class-name"));
-   return new DataSourceProxy(dataSource);
+       DruidDataSource dataSource = new DruidDataSource();
+       dataSource.setUrl(env.getProperty("spring.datasource.url"));
+       dataSource.setUsername(env.getProperty("spring.datasource.username"));
+       dataSource.setPassword(env.getProperty("spring.datasource.password"));
+       dataSource.setDriverClassName(env.getProperty("spring.datasource.driver-class-name"));
+       return new DataSourceProxy(dataSource);
+   }
+   @Bean
+   public SqlSessionFactory sqlSessionFactory(DataSourceProxy dataSourceProxy) throws Exception {
+       SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
+       sqlSessionFactoryBean.setDataSource(dataSourceProxy);
+       sqlSessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver()
+               .getResources("classpath*:/mybatis/*.xml"));
+       sqlSessionFactoryBean.setTransactionFactory(new SpringManagedTransactionFactory());
+       return sqlSessionFactoryBean.getObject();
    }
    ```
 
@@ -269,23 +278,27 @@
              UUIDGenerator.init(parameterParser.getServerNode());
              //设置日志存储格式
              SessionHolder.init(parameterParser.getStoreMode());
-     		//
+             //设置默认协调器
              DefaultCoordinator coordinator = new DefaultCoordinator(rpcServer);
+             //初始化协调器
              coordinator.init();
+             //设置为rpcServer的协调器
              rpcServer.setHandler(coordinator);
-             // register ShutdownHook
+             //注册关闭时需要关闭的服务
              ShutdownHook.getInstance().addDisposable(coordinator);
              ShutdownHook.getInstance().addDisposable(rpcServer);
      
-             //127.0.0.1 and 0.0.0.0 are not valid here.
+             //设置ip地址
              if (NetUtil.isValidIp(parameterParser.getHost(), false)) {
                  XID.setIpAddress(parameterParser.getHost());
              } else {
                  XID.setIpAddress(NetUtil.getLocalIp());
              }
+             //设置port
              XID.setPort(rpcServer.getListenPort());
      
              try {
+                 //启动rpc服务
                  rpcServer.init();
              } catch (Throwable e) {
                  LOGGER.error("rpcServer init error:{}", e.getMessage(), e);
@@ -297,5 +310,123 @@
      ```
 
 * 表的建立
-
   
+    每个业务数据库都需要建立一张undo_log表
+    ```
+    CREATE TABLE `undo_log` (
+      `id` bigint(20) NOT NULL AUTO_INCREMENT,
+      `branch_id` bigint(20) NOT NULL,
+      `xid` varchar(100) NOT NULL,
+      `context` varchar(128) NOT NULL,
+      `rollback_info` longblob NOT NULL,
+      `log_status` int(11) NOT NULL,
+      `log_created` datetime NOT NULL,
+      `log_modified` datetime NOT NULL,
+      `ext` varchar(100) DEFAULT NULL,
+      PRIMARY KEY (`id`),
+      UNIQUE KEY `ux_undo_log` (`xid`,`branch_id`)
+    ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8
+    ```
+    
+    **user数据库**：
+    
+    ```
+    CREATE TABLE `t_test` (
+      `id` bigint(11) NOT NULL AUTO_INCREMENT,
+      `name` varchar(50) NOT NULL DEFAULT '' COMMENT '名称',
+      `age` varchar(50) NOT NULL DEFAULT '',
+      `phone` varchar(11) NOT NULL DEFAULT '' COMMENT '手机号',
+      PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8
+    ```
+    
+    **order数据库**：
+    
+    ```
+    CREATE TABLE `t_order` (
+      `order_id` int(11) NOT NULL AUTO_INCREMENT,
+      `order_code` varchar(50) CHARACTER SET latin1 NOT NULL DEFAULT '',
+      `order_price` decimal(11,2) NOT NULL DEFAULT '0.00',
+      `order_num` int(11) NOT NULL DEFAULT '0',
+      PRIMARY KEY (`order_id`)
+    ) ENGINE=InnoDB AUTO_INCREMENT=12339 DEFAULT CHARSET=utf8
+    ```
+    
+    **account数据库:**
+    
+    ```
+    CREATE TABLE `account` (
+      `account_id` int(11) NOT NULL AUTO_INCREMENT,
+      `account_name` varchar(50) CHARACTER SET latin1 NOT NULL DEFAULT '' COMMENT '账户名',
+      `amount` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT '金额',
+      `freeze_amount` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT '冻结金额',
+      `status` tinyint(3) NOT NULL DEFAULT '0' COMMENT '状态',
+      `create_time` datetime DEFAULT NULL,
+      `update_time` datetime DEFAULT NULL,
+      PRIMARY KEY (`account_id`)
+    ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+    
+    CREATE TABLE `account_record` (
+      `record_id` int(11) NOT NULL AUTO_INCREMENT,
+      `account_id` int(11) NOT NULL COMMENT '交易账户A',
+      `amount` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT '交易金额',
+      `status` tinyint(3) NOT NULL DEFAULT '0' COMMENT '交易状态',
+      `receive_id` int(11) NOT NULL COMMENT '交易账户B',
+      `create_time` datetime DEFAULT NULL,
+      `update_time` datetime DEFAULT NULL,
+      PRIMARY KEY (`record_id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+    ```
+    
+    **seata数据库:**
+    
+    ```
+    CREATE TABLE `branch_table` (
+      `branch_id` bigint(20) NOT NULL,
+      `xid` varchar(128) NOT NULL,
+      `transaction_id` bigint(20) DEFAULT NULL,
+      `resource_group_id` varchar(32) DEFAULT NULL,
+      `resource_id` varchar(256) DEFAULT NULL,
+      `branch_type` varchar(8) DEFAULT NULL,
+      `status` tinyint(4) DEFAULT NULL,
+      `client_id` varchar(64) DEFAULT NULL,
+      `application_data` varchar(2000) DEFAULT NULL,
+      `gmt_create` datetime(6) DEFAULT NULL,
+      `gmt_modified` datetime(6) DEFAULT NULL,
+      PRIMARY KEY (`branch_id`),
+      KEY `idx_xid` (`xid`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+    
+    CREATE TABLE `global_table` (
+      `xid` varchar(128) NOT NULL,
+      `transaction_id` bigint(20) DEFAULT NULL,
+      `status` tinyint(4) NOT NULL,
+      `application_id` varchar(32) DEFAULT NULL,
+      `transaction_service_group` varchar(32) DEFAULT NULL,
+      `transaction_name` varchar(128) DEFAULT NULL,
+      `timeout` int(11) DEFAULT NULL,
+      `begin_time` bigint(20) DEFAULT NULL,
+      `application_data` varchar(2000) DEFAULT NULL,
+      `gmt_create` datetime DEFAULT NULL,
+      `gmt_modified` datetime DEFAULT NULL,
+      PRIMARY KEY (`xid`),
+      KEY `idx_gmt_modified_status` (`gmt_modified`,`status`),
+      KEY `idx_transaction_id` (`transaction_id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+    
+    CREATE TABLE `lock_table` (
+      `row_key` varchar(128) NOT NULL,
+      `xid` varchar(96) DEFAULT NULL,
+      `transaction_id` bigint(20) DEFAULT NULL,
+      `branch_id` bigint(20) NOT NULL,
+      `resource_id` varchar(256) DEFAULT NULL,
+      `table_name` varchar(32) DEFAULT NULL,
+      `pk` varchar(36) DEFAULT NULL,
+      `gmt_create` datetime DEFAULT NULL,
+      `gmt_modified` datetime DEFAULT NULL,
+      PRIMARY KEY (`row_key`),
+      KEY `idx_branch_id` (`branch_id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+    ```
+    
+    
