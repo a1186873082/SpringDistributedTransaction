@@ -37,11 +37,6 @@ public class UserApplication {
     @Autowired
     private Environment env;
 
-    @PostConstruct
-    public void findAll() {
-
-    }
-
     @Primary
     @Bean("dataSource")
     public DataSourceProxy dataSource() {
